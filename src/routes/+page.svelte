@@ -3,6 +3,4 @@
 	<meta name="description" content="Kan du klura ut ordet?" />
 </svelte:head>
 
-<main>
-	<h1>Ordröj</h1>
-</main>
+<h1>Ordröj</h1>
