@@ -4,6 +4,7 @@
 </script>
 
 <div class="min-h-full flex flex-col">
+	<nav>Header</nav>
 	<main class="flex-1">
 		<slot />
 	</main>
