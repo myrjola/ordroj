@@ -8,18 +8,16 @@
 
 	export let selected;
 
-	const exact = answer === 'x';
-	const close = answer === 'c';
-	const missing = answer === '_';
-	const classes = classNames(
+	$: exact = answer === 'x';
+	$: closeAnswer = answer === 'c';
+	$: missing = answer === '_';
+	$: classes = classNames(
 		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d',
 		{
 			'rotate-x-[90deg]': missing,
-			'rotate-x-[180deg]': close,
+			'rotate-x-[180deg]': closeAnswer,
 			'rotate-x-[270deg]': exact,
 			'animate-spin-x-5': previous
-			// 'animate-spin-x-3': close,
-			// 'animate-spin-x-2': missing
 		}
 	);
 </script>
