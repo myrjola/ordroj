@@ -35,9 +35,15 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
-      - run: pnpm check
-      - run: pnpm lint
-      - run: pnpm test:unit
-      - run: pnpm build
-      - run: npx playwright install
-      - run: pnpm test
+      - name: Svelte check
+        run: pnpm check
+      - name: Lint
+        run: pnpm lint
+      - name: Unit test
+        run: pnpm test:unit
+      - name: Build
+        run: pnpm build
+      - name: Playwright install
+        run: npx playwright install
+      - name: Playwright test
+        run: pnpm test
