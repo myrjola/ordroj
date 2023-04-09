@@ -4,7 +4,7 @@
 </script>
 
 <div class="flex min-h-full flex-col">
-	<main class="flex-1">
+	<main class="relative flex-1 overflow-hidden">
 		<slot />
 	</main>
 	<Footer />

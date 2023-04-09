@@ -3,6 +3,7 @@
 	import { enhance } from '$app/forms';
 	import type { PageData, ActionData } from './$types';
 	import { reduced_motion } from './reduced-motion';
+	import classNames from 'classnames';
 
 	export let data: PageData;
 
@@ -21,7 +22,7 @@
 	 * A map of classnames for all letters that have been guessed,
 	 * used for styling the keyboard
 	 */
-	let classnames: Record<string, 'exact' | 'close' | 'missing'>;
+	let letterClassNames: Record<string, 'exact' | 'close' | 'missing'>;
 
 	/**
 	 * A map of descriptions for all letters that have been guessed,
@@ -30,7 +31,7 @@
 	let description: Record<string, string>;
 
 	$: {
-		classnames = {};
+		letterClassNames = {};
 		description = {};
 
 		data.answers.forEach((answer, i) => {
@@ -40,10 +41,10 @@
 				const letter = guess[i];
 
 				if (answer[i] === 'x') {
-					classnames[letter] = 'exact';
+					letterClassNames[letter] = 'exact';
 					description[letter] = 'correct';
-				} else if (!classnames[letter]) {
-					classnames[letter] = answer[i] === 'c' ? 'close' : 'missing';
+				} else if (!letterClassNames[letter]) {
+					letterClassNames[letter] = answer[i] === 'c' ? 'close' : 'missing';
 					description[letter] = answer[i] === 'c' ? 'present' : 'absent';
 				}
 			}
@@ -86,108 +87,111 @@
 	<meta name="description" content="Kan du klura ut ordet?" />
 </svelte:head>
 
-<div class="relative overflow-hidden">
-	<h1 class="visually-hidden">Ordröj</h1>
+<h1 class="sr-only">Ordröj</h1>
 
-	<form
-		method="POST"
-		action="?/enter"
-		use:enhance={() => {
-			// prevent default callback from resetting the form
-			return ({ update }) => {
-				update({ reset: false });
-			};
-		}}
-	>
-		<div class="grid" class:playing={!won} class:bad-guess={form?.badGuess}>
-			{#each Array(6) as _, row}
-				{@const current = row === i}
-				<h2 class="visually-hidden">Row {row + 1}</h2>
-				<div class="row" class:current>
-					{#each Array(5) as _, column}
-						{@const answer = data.answers[row]?.[column]}
-						{@const value = data.guesses[row]?.[column] ?? ''}
-						{@const selected = current && column === data.guesses[row].length}
-						{@const exact = answer === 'x'}
-						{@const close = answer === 'c'}
-						{@const missing = answer === '_'}
-						<div class="letter" class:exact class:close class:missing class:selected>
-							{value}
-							<span class="visually-hidden">
-								{#if exact}
-									(correct)
-								{:else if close}
-									(present)
-								{:else if missing}
-									(absent)
-								{:else}
-									empty
-								{/if}
-							</span>
-							<input name="guess" disabled={!current} type="hidden" {value} />
-						</div>
-					{/each}
-				</div>
-			{/each}
-		</div>
+<form
+	class="mx-auto"
+	method="POST"
+	action="?/enter"
+	use:enhance={() => {
+		// prevent default callback from resetting the form
+		return ({ update }) => {
+			update({ reset: false });
+		};
+	}}
+>
+	<div class="flex flex-col">
+		{#each Array(6) as _, row}
+			{@const previous = row === i - 1}
+			{@const current = row === i}
+			<h2 class="sr-only">Row {row + 1}</h2>
+			<div class="mx-auto flex w-min">
+				{#each Array(5) as _, column}
+					{@const answer = data.answers[row]?.[column]}
+					{@const value = data.guesses[row]?.[column] ?? ''}
+					{@const selected = current && column === data.guesses[row].length}
+					{@const exact = answer === 'x'}
+					{@const close = answer === 'c'}
+					{@const missing = answer === '_'}
+					{@const classes = classNames('h-[15vw] w-[15vw] uppercase text-[10vw] border m-2', {
+						'bg-green-400': exact,
+						'bg-red-400': missing,
+						'bg-yellow-200': close
+					})}
+					<div class={classes}>
+						{value}
+						<span class="sr-only">
+							{#if exact}
+								(correct)
+							{:else if close}
+								(present)
+							{:else if missing}
+								(absent)
+							{:else}
+								empty
+							{/if}
+						</span>
+						<input name="guess" disabled={!current} type="hidden" {value} />
+					</div>
+				{/each}
+			</div>
+		{/each}
+	</div>
 
-		<div class="controls">
-			{#if won || data.answers.length >= 6}
-				{#if !won && data.answer}
-					<p>the answer was "{data.answer}"</p>
-				{/if}
-				<button data-key="enter" class="restart selected" formaction="?/restart">
-					{won ? 'you won :)' : `game over :(`} play again?
-				</button>
-			{:else}
-				<div class="keyboard">
-					<button data-key="enter" class:selected={submittable} disabled={!submittable}
-						>enter</button
-					>
-
-					<button
-						on:click|preventDefault={update}
-						data-key="backspace"
-						formaction="?/update"
-						name="key"
-						value="backspace"
-					>
-						back
-					</button>
-
-					{#each ['qwertyuiopå', 'asdfghjklöä', 'zxcvbnm'] as row}
-						<div class="row">
-							{#each row as letter}
-								<button
-									on:click|preventDefault={update}
-									data-key={letter}
-									class={classnames[letter]}
-									disabled={data.guesses[i].length === 5}
-									formaction="?/update"
-									name="key"
-									value={letter}
-									aria-label="{letter} {description[letter] || ''}"
-								>
-									{letter}
-								</button>
-							{/each}
-						</div>
-					{/each}
-				</div>
+	<div>
+		{#if won || data.answers.length >= 6}
+			{#if !won && data.answer}
+				<p>the answer was "{data.answer}"</p>
 			{/if}
-		</div>
-	</form>
+			<button data-key="enter" formaction="?/restart">
+				{won ? 'you won :)' : `game over :(`} play again?
+			</button>
+		{:else}
+			<div>
+				<button data-key="enter" disabled={!submittable}>enter</button>
 
-	{#if won}
-		<div
-			style="position: absolute; left: 50%; top: 30%"
-			use:confetti={{
-				particleCount: $reduced_motion ? 0 : undefined,
-				force: 0.7,
-				stageWidth: window.innerWidth,
-				stageHeight: window.innerHeight,
-				colors: ['#ff3e00', '#40b3ff', '#676778']
-			}}
-		/>
-	{/if}
-</div>
+				<button
+					on:click|preventDefault={update}
+					data-key="backspace"
+					formaction="?/update"
+					name="key"
+					value="backspace"
+				>
+					back
+				</button>
+
+				{#each ['qwertyuiopå', 'asdfghjklöä', 'zxcvbnm'] as row}
+					<div>
+						{#each row as letter}
+							<button
+								on:click|preventDefault={update}
+								data-key={letter}
+								class={letterClassNames[letter]}
+								disabled={data.guesses[i].length === 5}
+								formaction="?/update"
+								name="key"
+								value={letter}
+								aria-label="{letter} {description[letter] || ''}"
+							>
+								{letter}
+							</button>
+						{/each}
+					</div>
+				{/each}
+			</div>
+		{/if}
+	</div>
+</form>
+
+{#if won}
+	<div
+		style="position: absolute; left: 50%; top: 30%"
+		use:confetti={{
+			particleCount: $reduced_motion ? 0 : undefined,
+			force: 0.7,
+			stageWidth: window.innerWidth,
+			stageHeight: window.innerHeight,
+			colors: ['#ff3e00', '#40b3ff', '#676778']
+		}}
+	/>
+{/if}
