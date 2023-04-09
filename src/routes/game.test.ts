@@ -30,6 +30,6 @@ describe('game', () => {
 			'xx_cc',
 			'xxxxx'
 		]);
-		expect(game.answer).to.be.equal('madam');
+		expect(game.answer).to.be.equal('malis');
 	});
 });
