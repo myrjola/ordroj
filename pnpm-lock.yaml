@@ -1,5 +1,10 @@
 lockfileVersion: '6.0'
 
+dependencies:
+  lucide-svelte:
+    specifier: ^0.132.0
+    version: 0.132.0(svelte@3.58.0)
+
 devDependencies:
   '@neoconfetti/svelte':
     specifier: ^1.0.0
@@ -1847,6 +1852,14 @@ packages:
       yallist: 4.0.0
     dev: true
 
+  /lucide-svelte@0.132.0(svelte@3.58.0):
+    resolution: {integrity: sha512-hasqSf63poFZEkSYmYSuZMwVac5cSZbqzmaDR5XxQ+KKIArIup7suFZ53q1a4w/E9Zh8Oy2RwN2PX7gDyCAcJw==}
+    peerDependencies:
+      svelte: ^3.49.0
+    dependencies:
+      svelte: 3.58.0
+    dev: false
+
   /magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
     engines: {node: '>=12'}
@@ -2681,7 +2694,6 @@ packages:
   /svelte@3.58.0:
     resolution: {integrity: sha512-brIBNNB76mXFmU/Kerm4wFnkskBbluBDCjx/8TcpYRb298Yh2dztS2kQ6bhtjMcvUhd5ynClfwpz5h2gnzdQ1A==}
     engines: {node: '>= 8'}
-    dev: true
 
   /tailwindcss@3.3.1(postcss@8.4.21):
     resolution: {integrity: sha512-Vkiouc41d4CEq0ujXl6oiGFQ7bA3WEhUZdTgXAhtKxSy49OmKs8rEfQmupsfF0IGW8fv2iQkp1EVUuapCFrZ9g==}
