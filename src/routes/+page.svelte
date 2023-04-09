@@ -101,12 +101,12 @@
 		};
 	}}
 >
-	<div class="flex flex-col">
+	<div class="mx-auto flex max-w-lg flex-col">
 		{#each Array(6) as _, row}
 			{@const previous = row === i - 1}
 			{@const current = row === i}
 			<h2 class="sr-only">Row {row + 1}</h2>
-			<div class="mx-auto flex w-min transform-style-3d [perspective:1000px]">
+			<div class="mx-4 my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]">
 				{#each Array(5) as _, column}
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}

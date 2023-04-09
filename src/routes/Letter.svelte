@@ -12,7 +12,7 @@
 	const close = answer === 'c';
 	const missing = answer === '_';
 	const classes = classNames(
-		'[--side:16vw] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase text-[10vw] my-8 mx-2 transform-style-3d',
+		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d',
 		{
 			'rotate-x-[90deg]': missing,
 			'rotate-x-[180deg]': close,
