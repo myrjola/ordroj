@@ -4,6 +4,7 @@
 	import type { PageData, ActionData } from './$types';
 	import { reduced_motion } from './reduced-motion';
 	import classNames from 'classnames';
+	import Letter from './Letter.svelte';
 
 	export let data: PageData;
 
@@ -105,34 +106,12 @@
 			{@const previous = row === i - 1}
 			{@const current = row === i}
 			<h2 class="sr-only">Row {row + 1}</h2>
-			<div class="mx-auto flex w-min">
+			<div class="mx-auto flex w-min transform-style-3d [perspective:1000px]">
 				{#each Array(5) as _, column}
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
 					{@const selected = current && column === data.guesses[row].length}
-					{@const exact = answer === 'x'}
-					{@const close = answer === 'c'}
-					{@const missing = answer === '_'}
-					{@const classes = classNames('h-[15vw] w-[15vw] uppercase text-[10vw] border m-2', {
-						'bg-green-400': exact,
-						'bg-red-400': missing,
-						'bg-yellow-200': close
-					})}
-					<div class={classes}>
-						{value}
-						<span class="sr-only">
-							{#if exact}
-								(correct)
-							{:else if close}
-								(present)
-							{:else if missing}
-								(absent)
-							{:else}
-								empty
-							{/if}
-						</span>
-						<input name="guess" disabled={!current} type="hidden" {value} />
-					</div>
+					<Letter {answer} {value} {selected} {current} {previous} />
 				{/each}
 			</div>
 		{/each}
