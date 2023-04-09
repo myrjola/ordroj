@@ -20,9 +20,12 @@
 			'animate-[spinwheel_1s_ease_both]': previous
 		}
 	);
-	$: letterClasses = classNames('absolute inset-0 bg-white text-center translate-z-[--half-side]', {
-		'bg-blue-100': selected
-	});
+	$: letterClasses = classNames(
+		'absolute inset-0 bg-white text-center translate-z-[--half-side] border',
+		{
+			'bg-blue-100': selected
+		}
+	);
 </script>
 
 <div class={classes}>

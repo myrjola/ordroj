@@ -42,11 +42,14 @@
 				const letter = guess[i];
 
 				if (answer[i] === 'x') {
-					letterClassNames[letter] = 'exact';
-					description[letter] = 'correct';
+					letterClassNames[letter] = 'bg-green-400 hover:brightness-110';
+					description[letter] = 'korrekt';
 				} else if (!letterClassNames[letter]) {
-					letterClassNames[letter] = answer[i] === 'c' ? 'close' : 'missing';
-					description[letter] = answer[i] === 'c' ? 'present' : 'absent';
+					letterClassNames[letter] =
+						answer[i] === 'c'
+							? 'bg-yellow-400 hover:brightness-110'
+							: 'bg-red-400 hover:brightness-110';
+					description[letter] = answer[i] === 'c' ? 'fel ställe' : 'fel bokstav';
 				}
 			}
 		});
@@ -91,7 +94,6 @@
 <h1 class="sr-only">Ordröj</h1>
 
 <form
-	class="mx-auto"
 	method="POST"
 	action="?/enter"
 	use:enhance={() => {
@@ -106,7 +108,7 @@
 			{@const previous = row === i - 1}
 			{@const current = row === i}
 			<h2 class="sr-only">Row {row + 1}</h2>
-			<div class="mx-4 my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]">
+			<div class="mx-auto my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]">
 				{#each Array(5) as _, column}
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
@@ -117,7 +119,7 @@
 		{/each}
 	</div>
 
-	<div>
+	<div class="mx-auto max-w-2xl">
 		{#if won || data.answers.length >= 6}
 			{#if !won && data.answer}
 				<p>the answer was "{data.answer}"</p>
@@ -127,36 +129,44 @@
 			</button>
 		{:else}
 			<div>
-				<button data-key="enter" disabled={!submittable}>enter</button>
+				<div class="mx-2 mb-8 mt-4 grid grid-cols-11 gap-1">
+					{#each 'qwertyuiopåasdfghjklöäzxcvbnm' as letter}
+						<button
+							on:click|preventDefault={update}
+							data-key={letter}
+							class={classNames(
+								'border uppercase [aspect-ratio:1/1]',
+								letterClassNames[letter] ?? 'bg-white hover:bg-gray-100'
+							)}
+							disabled={data.guesses[i].length === 5}
+							formaction="?/update"
+							name="key"
+							value={letter}
+							aria-label="{letter} {description[letter] || ''}"
+						>
+							{letter}
+						</button>
+					{/each}
 
-				<button
-					on:click|preventDefault={update}
-					data-key="backspace"
-					formaction="?/update"
-					name="key"
-					value="backspace"
-				>
-					back
-				</button>
+					<button
+						class="col-start-8 col-end-10 border bg-white hover:bg-gray-100"
+						data-key="enter"
+						disabled={!submittable}
+					>
+						Mata in
+					</button>
 
-				{#each ['qwertyuiopå', 'asdfghjklöä', 'zxcvbnm'] as row}
-					<div>
-						{#each row as letter}
-							<button
-								on:click|preventDefault={update}
-								data-key={letter}
-								class={letterClassNames[letter]}
-								disabled={data.guesses[i].length === 5}
-								formaction="?/update"
-								name="key"
-								value={letter}
-								aria-label="{letter} {description[letter] || ''}"
-							>
-								{letter}
-							</button>
-						{/each}
-					</div>
-				{/each}
+					<button
+						class="col-start-10 col-end-12 border bg-white hover:bg-gray-100"
+						on:click|preventDefault={update}
+						data-key="backspace"
+						formaction="?/update"
+						name="key"
+						value="backspace"
+					>
+						Rensa
+					</button>
+				</div>
 			</div>
 		{/if}
 	</div>
