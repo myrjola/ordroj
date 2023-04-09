@@ -9,15 +9,15 @@
 	export let selected;
 
 	$: exact = answer === 'x';
-	$: closeAnswer = answer === 'c';
+	$: present = answer === 'c';
 	$: missing = answer === '_';
 	$: classes = classNames(
-		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d',
+		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] [--tw-spinwheel-offset:90deg] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d',
 		{
 			'rotate-x-[90deg]': missing,
-			'rotate-x-[180deg]': closeAnswer,
+			'rotate-x-[180deg]': present,
 			'rotate-x-[270deg]': exact,
-			'animate-spin-x-5': previous
+			'animate-[spinwheel_1s_ease_both]': previous
 		}
 	);
 </script>
@@ -51,7 +51,7 @@
 	<span class="sr-only">
 		{#if exact}
 			(correct)
-		{:else if close}
+		{:else if present}
 			(present)
 		{:else if missing}
 			(absent)
@@ -61,3 +61,6 @@
 	</span>
 	<input name="guess" disabled={!current} type="hidden" {value} />
 </div>
+
+<style>
+</style>
