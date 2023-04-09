@@ -1,12 +1,11 @@
 <script>
 	import classNames from 'classnames';
 
-	export let value;
-	export let answer;
-	export let current;
-	export let previous;
-
-	export let selected;
+	export let value = '';
+	export let answer = '';
+	export let current = false;
+	export let previous = false;
+	export let selected = false;
 
 	$: exact = answer === 'x';
 	$: present = answer === 'c';

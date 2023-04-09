@@ -23,7 +23,7 @@
 	 * A map of classnames for all letters that have been guessed,
 	 * used for styling the keyboard
 	 */
-	let letterClassNames: Record<string, 'exact' | 'close' | 'missing'>;
+	let letterClassNames: Record<string, string>;
 
 	/**
 	 * A map of descriptions for all letters that have been guessed,
