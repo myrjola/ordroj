@@ -20,10 +20,13 @@
 			'animate-[spinwheel_1s_ease_both]': previous
 		}
 	);
+	$: letterClasses = classNames('absolute inset-0 bg-white text-center translate-z-[--half-side]', {
+		'bg-blue-100': selected
+	});
 </script>
 
 <div class={classes}>
-	<div class="absolute inset-0 bg-white text-center translate-z-[--half-side]">{value}</div>
+	<div class={letterClasses}>{value}</div>
 	<div
 		aria-hidden="true"
 		class="absolute inset-0 bg-green-400 text-center transform-style-3d -translate-y-[--half-side] rotate-x-[90deg]"
