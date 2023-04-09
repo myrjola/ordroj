@@ -119,13 +119,17 @@
 		{/each}
 	</div>
 
-	<div class="mx-auto max-w-2xl">
+	<div class="align-center mx-auto flex max-w-2xl flex-col">
 		{#if won || data.answers.length >= 6}
 			{#if !won && data.answer}
-				<p>the answer was "{data.answer}"</p>
+				<p class="my-8 text-center text-3xl">Rätta ordet var "{data.answer}"</p>
 			{/if}
-			<button data-key="enter" formaction="?/restart">
-				{won ? 'you won :)' : `game over :(`} play again?
+			<button
+				class="m-8 border bg-white p-8 text-xl hover:bg-gray-100"
+				data-key="enter"
+				formaction="?/restart"
+			>
+				{won ? 'Du vann 🎉' : `Du förlorade 💀`} spela igen??
 			</button>
 		{:else}
 			<div>
