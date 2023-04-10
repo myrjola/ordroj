@@ -127,7 +127,7 @@
 	<div class="align-center mx-auto flex max-w-2xl flex-col">
 		<div class="min-h-[calc(2.25rem+2rem)]">
 			{#if badGuess}
-				<p class="my-4 text-center text-3xl text-red-600">
+				<p class="my-4 text-center text-lg text-red-600 sm:text-3xl">
 					"{data.guesses[i]}" är inte med på ordlistan.
 				</p>
 			{/if}
