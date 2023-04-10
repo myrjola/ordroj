@@ -6,10 +6,6 @@ export default {
 	theme: {
 		extend: {
 			keyframes: {
-				spinwheel: {
-					from: { transform: 'rotateX(0deg)' },
-					to: { transform: 'rotateX(calc(1turn + var(--tw-rotate-x)))' }
-				},
 				shake: {
 					'0%': { transform: 'translateX(0rem)' },
 					'20%': { transform: 'translateX(2rem)' },
