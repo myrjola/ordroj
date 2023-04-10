@@ -13,14 +13,14 @@
 	$: present = answer === 'c';
 	$: missing = answer === '_';
 	$: classes = classNames(
-		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase rotate-x-[0deg] text-[calc(var(--side)*0.7)] mx-2 transform-style-3d transition-transform duration-1000 ease-in motion-reduce:transition-none',
+		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d transition-transform duration-1000 ease-out motion-reduce:transition-none',
 		{
 			'rotate-x-[calc(1turn+90deg)]': missing,
 			'rotate-x-[calc(1turn+180deg)]': present,
 			'rotate-x-[calc(1turn+270deg)]': exact,
-			'rotate-x-[2turn]': loading && current,
-			'motion-safe:animate-shake': badGuess && current
-		}
+			'motion-safe:animate-shake rotate-x-[0deg]': badGuess && current
+		},
+		loading && current ? 'rotate-x-[1turn]' : 'rotate-x-[0deg]'
 	);
 	$: letterClasses = classNames(
 		'absolute inset-0 text-center translate-z-[--half-side] border',

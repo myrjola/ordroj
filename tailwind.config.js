@@ -16,7 +16,7 @@ export default {
 				}
 			},
 			animation: {
-				shake: 'shake 300ms ease'
+				shake: 'shake 300ms ease both'
 			}
 		}
 	},
