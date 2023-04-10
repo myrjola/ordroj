@@ -125,11 +125,13 @@
 	</div>
 
 	<div class="align-center mx-auto flex max-w-2xl flex-col">
-		{#if badGuess}
-			<p class="my-8 text-center text-3xl text-red-300">
-				"{data.guesses[i]}" är inte med på ordlistan.
-			</p>
-		{/if}
+		<div class="min-h-[calc(2.25rem+2rem)]">
+			{#if badGuess}
+				<p class="my-4 text-center text-3xl text-red-600">
+					"{data.guesses[i]}" är inte med på ordlistan.
+				</p>
+			{/if}
+		</div>
 		{#if won || data.answers.length >= 6}
 			{#if !won && data.answer}
 				<p class="my-8 text-center text-3xl">Rätta ordet var "{data.answer}"</p>
