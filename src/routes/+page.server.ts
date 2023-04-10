@@ -5,7 +5,14 @@ import type { PageServerLoad, Actions } from './$types';
 const cookieName = 'ordroj';
 
 export const load = (({ cookies }) => {
-	const game = new Game(cookies.get(cookieName));
+	let game: Game;
+	try {
+		game = new Game(cookies.get(cookieName));
+	} catch (_) {
+		// Reset the game to latest version.
+		game = new Game();
+		cookies.set(cookieName, game.toString());
+	}
 
 	return {
 		/**
