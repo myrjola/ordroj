@@ -165,7 +165,7 @@
 					{/each}
 
 					<button
-						class="col-start-8 col-end-10 border bg-white hover:bg-gray-100"
+						class="col-start-8 col-end-10 border bg-white hover:bg-gray-100 disabled:opacity-25"
 						data-key="enter"
 						disabled={!submittable}
 					>
