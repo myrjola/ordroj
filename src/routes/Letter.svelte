@@ -13,7 +13,7 @@
 	$: present = answer === 'c';
 	$: missing = answer === '_';
 	$: classes = classNames(
-		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d transition-transform ease-out motion-reduce:transition-none',
+		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d transition-transform ease-in-out motion-reduce:transition-none',
 		{
 			'rotate-x-[calc(1turn+90deg)]': missing,
 			'rotate-x-[calc(1turn+180deg)]': present,
