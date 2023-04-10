@@ -13,13 +13,12 @@
 	$: present = answer === 'c';
 	$: missing = answer === '_';
 	$: classes = classNames(
-		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] [--tw-spinwheel-offset:90deg] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d',
+		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase rotate-x-[0deg] text-[calc(var(--side)*0.7)] mx-2 transform-style-3d transition-transform duration-1000 ease-in motion-reduce:transition-none',
 		{
-			'rotate-x-[90deg]': missing,
-			'rotate-x-[180deg]': present,
-			'rotate-x-[270deg]': exact,
-			'motion-safe:animate-[spinwheel_1s_ease-in]': previous,
-			'motion-safe:animate-spin-x-2': loading && current,
+			'rotate-x-[calc(1turn+90deg)]': missing,
+			'rotate-x-[calc(1turn+180deg)]': present,
+			'rotate-x-[calc(1turn+270deg)]': exact,
+			'rotate-x-[2turn]': loading && current,
 			'motion-safe:animate-shake': badGuess && current
 		}
 	);
