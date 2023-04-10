@@ -18,13 +18,13 @@
 			'rotate-x-[90deg]': missing,
 			'rotate-x-[180deg]': present,
 			'rotate-x-[270deg]': exact,
-			'animate-[spinwheel_1s_ease-in]': previous,
-			'animate-spin-x-2': loading && current,
-			'animate-shake': badGuess && current
+			'motion-safe:animate-[spinwheel_1s_ease-in]': previous,
+			'motion-safe:animate-spin-x-2': loading && current,
+			'motion-safe:animate-shake': badGuess && current
 		}
 	);
 	$: letterClasses = classNames(
-		'absolute inset-0 bg-white text-center translate-z-[--half-side] border',
+		'absolute inset-0 text-center translate-z-[--half-side] border',
 		selected ? 'bg-blue-100' : 'bg-white'
 	);
 </script>
