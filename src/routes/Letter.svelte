@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
 	import classNames from 'classnames';
 
-	export let value = '';
-	export let answer = '';
-	export let current = false;
-	export let selected = false;
-	export let badGuess = false;
-	export let column = 0;
-	export let update = () => {};
+	export let value: string;
+	export let answer: string;
+	export let current: boolean;
+	export let selected: boolean;
+	export let badGuess: boolean | undefined;
+	export let column: number;
+	export let update: (e: MouseEvent) => void;
 
 	$: exact = answer === 'x';
 	$: present = answer === 'c';
