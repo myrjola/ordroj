@@ -93,12 +93,11 @@
 			}
 		} else if (position >= 0) {
 			data.position = position;
-		} else if (filteredGuess.length < 5) {
+		} else {
 			guess[data.position] = key?.toString() ?? ' ';
 			data.guesses[i] = guess.join('');
 			data.position += 1;
-			console.log(newGuess);
-			console.log(data);
+			if (form?.badGuess) form.badGuess = false;
 		}
 	}
 
