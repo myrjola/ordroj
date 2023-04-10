@@ -130,7 +130,6 @@
 		class="mx-auto flex max-w-lg flex-shrink flex-col overflow-y-auto"
 	>
 		{#each Array(6) as _, row}
-			{@const previous = row === i - 1}
 			{@const current = row === i}
 			<h2 class="sr-only">Row {row + 1}</h2>
 			<div
@@ -141,7 +140,7 @@
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
 					{@const selected = current && column === data.guesses[row].length}
-					<Letter {answer} {value} {selected} {current} {previous} {loading} {badGuess} />
+					<Letter {answer} {value} {selected} {current} {badGuess} />
 				{/each}
 			</div>
 		{/each}

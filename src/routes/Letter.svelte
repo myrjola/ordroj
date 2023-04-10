@@ -4,23 +4,20 @@
 	export let value = '';
 	export let answer = '';
 	export let current = false;
-	export let previous = false;
 	export let selected = false;
-	export let loading = false;
 	export let badGuess = false;
 
 	$: exact = answer === 'x';
 	$: present = answer === 'c';
 	$: missing = answer === '_';
 	$: classes = classNames(
-		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d transition-transform ease-in-out motion-reduce:transition-none',
+		'[--side:min(12vw,80px)] [--half-side:calc(var(--side)/2)] h-[--side] w-[--side] rotate-x-[0deg] relative uppercase text-[calc(var(--side)*0.7)] mx-2 transform-style-3d transition-transform ease-in-out motion-reduce:transition-none duration-1000',
 		{
 			'rotate-x-[calc(1turn+90deg)]': missing,
 			'rotate-x-[calc(1turn+180deg)]': present,
-			'rotate-x-[calc(1turn+270deg)]': exact
-		},
-		loading && current ? 'rotate-x-[1turn]' : 'rotate-x-[0deg]',
-		badGuess && current ? 'motion-safe:animate-shake rotate-x-[0deg] duration-0' : 'duration-1000'
+			'rotate-x-[calc(1turn+270deg)]': exact,
+			'motion-safe:animate-shake': badGuess && current
+		}
 	);
 	$: letterClasses = classNames(
 		'absolute inset-0 text-center translate-z-[--half-side] border',
