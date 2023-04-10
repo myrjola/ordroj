@@ -24,10 +24,10 @@
 
 	$: badGuess = form?.badGuess;
 
-	let scrollContainer;
-	let scrollOffsetElement;
+	let scrollContainer: HTMLElement;
+	let scrollOffsetElement: HTMLElement;
 
-	$: if (scrollContainer) {
+	$: if (scrollContainer && scrollOffsetElement) {
 		const styles = window.getComputedStyle(scrollOffsetElement);
 		const margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
 		const rowOffset = scrollOffsetElement.offsetHeight + margin;
