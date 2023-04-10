@@ -18,7 +18,7 @@
 			'rotate-x-[calc(1turn+90deg)]': missing,
 			'rotate-x-[calc(1turn+180deg)]': present,
 			'rotate-x-[calc(1turn+270deg)]': exact,
-			'motion-safe:animate-shake rotate-x-[0deg]': badGuess && current
+			'motion-safe:animate-shake rotate-x-[0deg] duration-0': badGuess && current
 		},
 		loading && current ? 'rotate-x-[1turn]' : 'rotate-x-[0deg]'
 	);
