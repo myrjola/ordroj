@@ -20,6 +20,11 @@ export const load = (({ cookies }) => {
 		answers: game.answers,
 
 		/**
+		 * The cursor position
+		 */
+		position: game.position,
+
+		/**
 		 * The correct answer, revealed if the game is over
 		 */
 		answer: game.answers.length >= 6 ? game.answer : null
@@ -37,12 +42,22 @@ export const actions = {
 		const data = await request.formData();
 		const key = data.get('key');
 
+		const position = parseInt(key?.toString() ?? '');
+
 		const i = game.answers.length;
 
 		if (key === 'backspace') {
-			game.guesses[i] = game.guesses[i].slice(0, -1);
+			const newGuess = game.guesses[i].split('');
+			newGuess[game.position - 1] = ' ';
+			game.guesses[i] = newGuess.join('');
+			game.position -= 1;
+		} else if (position >= 0) {
+			game.position = position;
 		} else {
-			game.guesses[i] += key;
+			const newGuess = game.guesses[i].split('');
+			newGuess[game.position] = key?.toString() ?? ' ';
+			game.guesses[i] = newGuess.join('');
+			game.position += 1;
 		}
 
 		cookies.set(cookieName, game.toString());

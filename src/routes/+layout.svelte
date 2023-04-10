@@ -3,8 +3,8 @@
 	import Footer from './Footer.svelte';
 </script>
 
-<div class="flex min-h-full flex-col">
-	<main class="relative flex-1 overflow-hidden bg-slate-50">
+<div class="h-full">
+	<main class="relative h-full overflow-hidden bg-slate-50">
 		<slot />
 	</main>
 	<Footer />

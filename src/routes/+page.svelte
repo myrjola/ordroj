@@ -5,10 +5,13 @@
 	import { reduced_motion } from './reduced-motion';
 	import classNames from 'classnames';
 	import Letter from './Letter.svelte';
+	import { CornerDownLeft, Delete } from 'lucide-svelte';
 
 	export let data: PageData;
 
 	export let form: ActionData;
+
+	let loading = false;
 
 	/** Whether or not the user has won */
 	$: won = data.answers.at(-1) === 'xxxxx';
@@ -17,7 +20,24 @@
 	$: i = won ? -1 : data.answers.length;
 
 	/** Whether the current guess can be submitted */
-	$: submittable = data.guesses[i]?.length === 5;
+	$: submittable = data?.guesses?.[i]?.split('')?.filter((c) => c !== ' ')?.length === 5;
+
+	$: badGuess = form?.badGuess;
+
+	let scrollContainer: HTMLElement;
+	let scrollOffsetElement: HTMLElement;
+
+	// Keep the current row scrolled to the bottom.
+	$: if (scrollContainer && scrollOffsetElement) {
+		const styles = window.getComputedStyle(scrollOffsetElement);
+		const margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
+		const rowOffset = scrollOffsetElement.offsetHeight + margin;
+		const offset = rowOffset * (i + 1) - scrollContainer.offsetHeight;
+		scrollContainer.scroll({
+			top: offset,
+			behavior: 'smooth'
+		});
+	}
 
 	/**
 	 * A map of classnames for all letters that have been guessed,
@@ -60,14 +80,24 @@
 	 * if client-side JavaScript is enabled
 	 */
 	function update(event: MouseEvent) {
-		const guess = data.guesses[i];
+		const guess = data.guesses[i].split('');
+		const filteredGuess = guess.filter((c) => c !== ' ');
 		const key = (event.target as HTMLButtonElement).getAttribute('data-key');
-
+		const position = parseInt(key?.toString() ?? '');
 		if (key === 'backspace') {
-			data.guesses[i] = guess.slice(0, -1);
+			if (data.position > 0) {
+				guess[data.position - 1] = ' ';
+				data.guesses[i] = guess.join('');
+				data.position -= 1;
+				if (form?.badGuess) form.badGuess = false;
+			}
+		} else if (position >= 0) {
+			data.position = position;
+		} else {
+			guess[data.position] = key?.toString() ?? ' ';
+			data.guesses[i] = guess.join('');
+			data.position += 1;
 			if (form?.badGuess) form.badGuess = false;
-		} else if (guess.length < 5) {
-			data.guesses[i] += key;
 		}
 	}
 
@@ -78,8 +108,15 @@
 	function keydown(event: KeyboardEvent) {
 		if (event.metaKey) return;
 
+		if (event.key === 'ArrowRight' && data.position < 5) {
+			data.position += 1;
+			return;
+		} else if (event.key === 'ArrowLeft' && data.position > 0) {
+			data.position -= 1;
+		}
+
 		document
-			.querySelector(`[data-key="${event.key}" i]`)
+			.querySelector(`[data-key="${event.key}" i]:not(:disabled)`)
 			?.dispatchEvent(new MouseEvent('click', { cancelable: true }));
 	}
 </script>
@@ -94,38 +131,53 @@
 <h1 class="sr-only">Ordröj</h1>
 
 <form
+	class="flex h-full flex-col"
 	method="POST"
 	action="?/enter"
 	use:enhance={() => {
+		loading = true;
 		// prevent default callback from resetting the form
 		return ({ update }) => {
+			loading = false;
 			update({ reset: false });
 		};
 	}}
 >
-	<div class="mx-auto flex max-w-lg flex-col">
+	<div
+		bind:this={scrollContainer}
+		class="mx-auto flex max-w-lg flex-shrink flex-col overflow-y-auto"
+	>
 		{#each Array(6) as _, row}
-			{@const previous = row === i - 1}
 			{@const current = row === i}
 			<h2 class="sr-only">Row {row + 1}</h2>
-			<div class="mx-auto my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]">
+			<div
+				bind:this={scrollOffsetElement}
+				class="mx-2 my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]"
+			>
 				{#each Array(5) as _, column}
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
-					{@const selected = current && column === data.guesses[row].length}
-					<Letter {answer} {value} {selected} {current} {previous} />
+					{@const selected = current && column === data.position}
+					<Letter {answer} {value} {selected} {current} {badGuess} {update} {column} />
 				{/each}
 			</div>
 		{/each}
 	</div>
 
-	<div class="align-center mx-auto flex max-w-2xl flex-col">
+	<div class="align-center mx-auto flex w-full max-w-2xl flex-col">
+		<div class="min-h-[calc(2.25rem+2rem)]">
+			{#if badGuess}
+				<p class="my-4 text-center text-lg text-red-600 sm:text-3xl">
+					"{data.guesses[i]}" är inte med på ordlistan.
+				</p>
+			{/if}
+		</div>
 		{#if won || data.answers.length >= 6}
 			{#if !won && data.answer}
 				<p class="my-8 text-center text-3xl">Rätta ordet var "{data.answer}"</p>
 			{/if}
 			<button
-				class="m-8 border bg-white p-8 text-xl hover:bg-gray-100"
+				class="m-8 border bg-white p-8 text-xl shadow hover:bg-gray-100"
 				data-key="enter"
 				formaction="?/restart"
 			>
@@ -139,10 +191,9 @@
 							on:click|preventDefault={update}
 							data-key={letter}
 							class={classNames(
-								'border uppercase [aspect-ratio:1/1]',
+								'border uppercase shadow [aspect-ratio:1/1]',
 								letterClassNames[letter] ?? 'bg-white hover:bg-gray-100'
 							)}
-							disabled={data.guesses[i].length === 5}
 							formaction="?/update"
 							name="key"
 							value={letter}
@@ -153,22 +204,24 @@
 					{/each}
 
 					<button
-						class="col-start-8 col-end-10 border bg-white hover:bg-gray-100"
+						class="col-start-8 col-end-10 flex items-center justify-center border bg-white shadow shadow hover:bg-gray-100 disabled:opacity-25"
 						data-key="enter"
 						disabled={!submittable}
 					>
-						Mata in
+						<span class="sr-only">Mata in</span>
+						<CornerDownLeft class="pointer-events-none" size="16" />
 					</button>
 
 					<button
-						class="col-start-10 col-end-12 border bg-white hover:bg-gray-100"
+						class="col-start-10 col-end-12 flex items-center justify-center border bg-white shadow hover:bg-gray-100"
 						on:click|preventDefault={update}
 						data-key="backspace"
 						formaction="?/update"
 						name="key"
 						value="backspace"
 					>
-						Rensa
+						<span class="sr-only">Rensa</span>
+						<Delete class="pointer-events-none" size="16" />
 					</button>
 				</div>
 			</div>
