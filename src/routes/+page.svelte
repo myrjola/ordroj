@@ -97,6 +97,7 @@
 <h1 class="sr-only">Ordröj</h1>
 
 <form
+	class="flex h-full flex-col"
 	method="POST"
 	action="?/enter"
 	use:enhance={() => {
@@ -108,12 +109,12 @@
 		};
 	}}
 >
-	<div class="mx-auto flex max-w-lg flex-col">
+	<div class="mx-auto flex max-w-lg flex-shrink flex-col overflow-y-auto">
 		{#each Array(6) as _, row}
 			{@const previous = row === i - 1}
 			{@const current = row === i}
 			<h2 class="sr-only">Row {row + 1}</h2>
-			<div class="mx-auto my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]">
+			<div class="mx-2 my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]">
 				{#each Array(5) as _, column}
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
@@ -124,7 +125,7 @@
 		{/each}
 	</div>
 
-	<div class="align-center mx-auto flex max-w-2xl flex-col">
+	<div class="align-center mx-auto flex w-full max-w-2xl flex-col">
 		<div class="min-h-[calc(2.25rem+2rem)]">
 			{#if badGuess}
 				<p class="my-4 text-center text-lg text-red-600 sm:text-3xl">
