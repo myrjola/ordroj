@@ -5,6 +5,7 @@
 	import { reduced_motion } from './reduced-motion';
 	import classNames from 'classnames';
 	import Letter from './Letter.svelte';
+
 	export let data: PageData;
 
 	export let form: ActionData;
@@ -21,6 +22,20 @@
 	$: submittable = data.guesses[i]?.length === 5;
 
 	$: badGuess = form?.badGuess;
+
+	let scrollContainer;
+	let scrollOffsetElement;
+
+	$: if (scrollContainer) {
+		const styles = window.getComputedStyle(scrollOffsetElement);
+		const margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
+		const rowOffset = scrollOffsetElement.offsetHeight + margin;
+		const offset = rowOffset * (i + 1) - scrollContainer.offsetHeight;
+		scrollContainer.scroll({
+			top: offset,
+			behavior: 'smooth'
+		});
+	}
 
 	/**
 	 * A map of classnames for all letters that have been guessed,
@@ -109,12 +124,18 @@
 		};
 	}}
 >
-	<div class="mx-auto flex max-w-lg flex-shrink flex-col overflow-y-auto">
+	<div
+		bind:this={scrollContainer}
+		class="mx-auto flex max-w-lg flex-shrink flex-col overflow-y-auto"
+	>
 		{#each Array(6) as _, row}
 			{@const previous = row === i - 1}
 			{@const current = row === i}
 			<h2 class="sr-only">Row {row + 1}</h2>
-			<div class="mx-2 my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]">
+			<div
+				bind:this={scrollOffsetElement}
+				class="mx-2 my-[min(4vw,24px)] flex transform-style-3d [perspective:1000px]"
+			>
 				{#each Array(5) as _, column}
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
