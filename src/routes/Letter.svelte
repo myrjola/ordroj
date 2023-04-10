@@ -6,6 +6,7 @@
 	export let current = false;
 	export let previous = false;
 	export let selected = false;
+	export let loading = false;
 
 	$: exact = answer === 'x';
 	$: present = answer === 'c';
@@ -16,14 +17,13 @@
 			'rotate-x-[90deg]': missing,
 			'rotate-x-[180deg]': present,
 			'rotate-x-[270deg]': exact,
-			'animate-[spinwheel_1s_ease_both]': previous
+			'animate-[spinwheel_1s_ease-in]': previous,
+			'animate-spin-x-2': loading && current
 		}
 	);
 	$: letterClasses = classNames(
 		'absolute inset-0 bg-white text-center translate-z-[--half-side] border',
-		{
-			'bg-blue-100': selected
-		}
+		selected ? 'bg-blue-100' : 'bg-white'
 	);
 </script>
 

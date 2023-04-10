@@ -5,10 +5,11 @@
 	import { reduced_motion } from './reduced-motion';
 	import classNames from 'classnames';
 	import Letter from './Letter.svelte';
-
 	export let data: PageData;
 
 	export let form: ActionData;
+
+	let loading = false;
 
 	/** Whether or not the user has won */
 	$: won = data.answers.at(-1) === 'xxxxx';
@@ -97,8 +98,10 @@
 	method="POST"
 	action="?/enter"
 	use:enhance={() => {
+		loading = true;
 		// prevent default callback from resetting the form
 		return ({ update }) => {
+			loading = false;
 			update({ reset: false });
 		};
 	}}
@@ -113,7 +116,7 @@
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
 					{@const selected = current && column === data.guesses[row].length}
-					<Letter {answer} {value} {selected} {current} {previous} />
+					<Letter {answer} {value} {selected} {current} {previous} {loading} />
 				{/each}
 			</div>
 		{/each}
