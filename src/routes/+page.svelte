@@ -20,13 +20,14 @@
 	$: i = won ? -1 : data.answers.length;
 
 	/** Whether the current guess can be submitted */
-	$: submittable = data.guesses[i]?.length === 5;
+	$: submittable = data?.guesses?.[i]?.split('')?.filter((c) => c !== ' ')?.length === 5;
 
 	$: badGuess = form?.badGuess;
 
 	let scrollContainer: HTMLElement;
 	let scrollOffsetElement: HTMLElement;
 
+	// Keep the current row scrolled to the bottom.
 	$: if (scrollContainer && scrollOffsetElement) {
 		const styles = window.getComputedStyle(scrollOffsetElement);
 		const margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
@@ -79,13 +80,25 @@
 	 * if client-side JavaScript is enabled
 	 */
 	function update(event: MouseEvent) {
-		const guess = data.guesses[i];
+		const guess = data.guesses[i].split('');
+		const filteredGuess = guess.filter((c) => c !== ' ');
 		const key = (event.target as HTMLButtonElement).getAttribute('data-key');
+		const position = parseInt(key?.toString() ?? '');
 		if (key === 'backspace') {
-			data.guesses[i] = guess.slice(0, -1);
-			if (form?.badGuess) form.badGuess = false;
-		} else if (guess.length < 5) {
-			data.guesses[i] += key;
+			if (data.position > 0) {
+				guess[data.position - 1] = ' ';
+				data.guesses[i] = guess.join('');
+				data.position -= 1;
+				if (form?.badGuess) form.badGuess = false;
+			}
+		} else if (position >= 0) {
+			data.position = position;
+		} else if (filteredGuess.length < 5) {
+			guess[data.position] = key?.toString() ?? ' ';
+			data.guesses[i] = guess.join('');
+			data.position += 1;
+			console.log(newGuess);
+			console.log(data);
 		}
 	}
 
@@ -96,8 +109,15 @@
 	function keydown(event: KeyboardEvent) {
 		if (event.metaKey) return;
 
+		if (event.key === 'ArrowRight' && data.position < 5) {
+			data.position += 1;
+			return;
+		} else if (event.key === 'ArrowLeft' && data.position > 0) {
+			data.position -= 1;
+		}
+
 		document
-			.querySelector(`[data-key="${event.key}" i]`)
+			.querySelector(`[data-key="${event.key}" i]:not(:disabled)`)
 			?.dispatchEvent(new MouseEvent('click', { cancelable: true }));
 	}
 </script>
@@ -138,8 +158,8 @@
 				{#each Array(5) as _, column}
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
-					{@const selected = current && column === data.guesses[row].length}
-					<Letter {answer} {value} {selected} {current} {badGuess} />
+					{@const selected = current && column === data.position}
+					<Letter {answer} {value} {selected} {current} {badGuess} {update} {column} />
 				{/each}
 			</div>
 		{/each}
@@ -175,7 +195,6 @@
 								'border uppercase shadow [aspect-ratio:1/1]',
 								letterClassNames[letter] ?? 'bg-white hover:bg-gray-100'
 							)}
-							disabled={data.guesses[i].length === 5}
 							formaction="?/update"
 							name="key"
 							value={letter}

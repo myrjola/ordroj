@@ -6,6 +6,8 @@
 	export let current = false;
 	export let selected = false;
 	export let badGuess = false;
+	export let column = 0;
+	export let update = () => {};
 
 	$: exact = answer === 'x';
 	$: present = answer === 'c';
@@ -20,13 +22,21 @@
 		}
 	);
 	$: letterClasses = classNames(
-		'absolute inset-0 text-center translate-z-[--half-side] border',
+		'uppercase absolute inset-0 text-center translate-z-[--half-side] border',
 		selected ? 'bg-blue-100' : 'bg-white'
 	);
 </script>
 
 <div class={classes}>
-	<div class={letterClasses}>{value}</div>
+	<button
+		on:click|preventDefault={update}
+		data-key={column}
+		formaction="?/update"
+		name="key"
+		value={column}
+		disabled={!current}
+		class={letterClasses}>{value}</button
+	>
 	<div
 		aria-hidden="true"
 		class="absolute inset-0 bg-green-400 text-center transform-style-3d -translate-y-[--half-side] rotate-x-[90deg]"

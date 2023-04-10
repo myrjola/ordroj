@@ -7,11 +7,12 @@ describe('game', () => {
 		expect(game.index).to.be.a('number');
 		expect(game.answers).to.be.an('array').that.is.empty;
 		expect(game.answer).to.be.length(5);
+		expect(game.position).to.equal(0);
 	});
 
 	it('parses cookie', () => {
 		const game = new Game(
-			'2258-raket macho mager magik magma madam-_x___ xx___ xx___ xx___ xx_cc xxxxx'
+			'2258-raket macho mager magik magma madam-_x___ xx___ xx___ xx___ xx_cc xxxxx-6'
 		);
 		expect(game.guesses).to.have.ordered.members([
 			'raket',
@@ -30,6 +31,7 @@ describe('game', () => {
 			'xx_cc',
 			'xxxxx'
 		]);
-		expect(game.answer).to.be.equal('malis');
+		expect(game.answer).to.equal('malis');
+		expect(game.position).to.equal(6);
 	});
 });
