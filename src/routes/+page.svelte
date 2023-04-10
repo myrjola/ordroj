@@ -20,6 +20,8 @@
 	/** Whether the current guess can be submitted */
 	$: submittable = data.guesses[i]?.length === 5;
 
+	$: badGuess = form?.badGuess;
+
 	/**
 	 * A map of classnames for all letters that have been guessed,
 	 * used for styling the keyboard
@@ -116,13 +118,18 @@
 					{@const answer = data.answers[row]?.[column]}
 					{@const value = data.guesses[row]?.[column] ?? ''}
 					{@const selected = current && column === data.guesses[row].length}
-					<Letter {answer} {value} {selected} {current} {previous} {loading} />
+					<Letter {answer} {value} {selected} {current} {previous} {loading} {badGuess} />
 				{/each}
 			</div>
 		{/each}
 	</div>
 
 	<div class="align-center mx-auto flex max-w-2xl flex-col">
+		{#if badGuess}
+			<p class="my-8 text-center text-3xl text-red-300">
+				"{data.guesses[i]}" är inte med på ordlistan.
+			</p>
+		{/if}
 		{#if won || data.answers.length >= 6}
 			{#if !won && data.answer}
 				<p class="my-8 text-center text-3xl">Rätta ordet var "{data.answer}"</p>

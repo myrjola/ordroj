@@ -7,6 +7,7 @@
 	export let previous = false;
 	export let selected = false;
 	export let loading = false;
+	export let badGuess = false;
 
 	$: exact = answer === 'x';
 	$: present = answer === 'c';
@@ -18,7 +19,8 @@
 			'rotate-x-[180deg]': present,
 			'rotate-x-[270deg]': exact,
 			'animate-[spinwheel_1s_ease-in]': previous,
-			'animate-spin-x-2': loading && current
+			'animate-spin-x-2': loading && current,
+			'animate-shake': badGuess && current
 		}
 	);
 	$: letterClasses = classNames(
