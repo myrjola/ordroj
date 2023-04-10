@@ -5,6 +5,7 @@
 	import { reduced_motion } from './reduced-motion';
 	import classNames from 'classnames';
 	import Letter from './Letter.svelte';
+	import { CornerDownLeft, Delete } from 'lucide-svelte';
 
 	export let data: PageData;
 
@@ -159,7 +160,7 @@
 				<p class="my-8 text-center text-3xl">Rätta ordet var "{data.answer}"</p>
 			{/if}
 			<button
-				class="m-8 border bg-white p-8 text-xl hover:bg-gray-100"
+				class="m-8 border bg-white p-8 text-xl shadow hover:bg-gray-100"
 				data-key="enter"
 				formaction="?/restart"
 			>
@@ -173,7 +174,7 @@
 							on:click|preventDefault={update}
 							data-key={letter}
 							class={classNames(
-								'border uppercase [aspect-ratio:1/1]',
+								'border uppercase shadow [aspect-ratio:1/1]',
 								letterClassNames[letter] ?? 'bg-white hover:bg-gray-100'
 							)}
 							disabled={data.guesses[i].length === 5}
@@ -187,22 +188,24 @@
 					{/each}
 
 					<button
-						class="col-start-8 col-end-10 border bg-white hover:bg-gray-100 disabled:opacity-25"
+						class="col-start-8 col-end-10 flex items-center justify-center border bg-white shadow shadow hover:bg-gray-100 disabled:opacity-25"
 						data-key="enter"
 						disabled={!submittable}
 					>
-						Mata in
+						<span class="sr-only"> Mata in </span>
+						<CornerDownLeft size="16" />
 					</button>
 
 					<button
-						class="col-start-10 col-end-12 border bg-white hover:bg-gray-100"
+						class="col-start-10 col-end-12 flex items-center justify-center border bg-white shadow hover:bg-gray-100"
 						on:click|preventDefault={update}
 						data-key="backspace"
 						formaction="?/update"
 						name="key"
 						value="backspace"
 					>
-						Rensa
+						<span class="sr-only"> Rensa </span>
+						<Delete size="16" />
 					</button>
 				</div>
 			</div>
