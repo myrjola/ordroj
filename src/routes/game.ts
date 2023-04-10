@@ -1,6 +1,9 @@
 import { words, allowed } from './words.server';
 
+export const latestGameVersion = 0;
+
 export class Game {
+	version: number;
 	index: number;
 	guesses: string[];
 	answers: string[];
@@ -12,13 +15,18 @@ export class Game {
 	 */
 	constructor(serialized: string | undefined = undefined) {
 		if (serialized) {
-			const [index, guesses, answers, position] = serialized.split('-');
+			const [version, index, guesses, answers, position] = serialized.split('-');
 
+			this.version = parseInt(version.slice(1));
+			if (!version.startsWith('@') || this.version !== latestGameVersion) {
+				throw 'invalid game version';
+			}
 			this.index = parseInt(index);
 			this.guesses = guesses ? guesses.split(';') : [];
 			this.answers = answers ? answers.split(';') : [];
 			this.position = parseInt(position);
 		} else {
+			this.version = latestGameVersion;
 			this.index = Math.floor(Math.random() * words.length);
 			this.guesses = Array(6).fill('     ');
 			this.answers = [];
@@ -73,6 +81,8 @@ export class Game {
 	 * Serialize game state, so it can be set as a cookie
 	 */
 	toString() {
-		return `${this.index}-${this.guesses.join(';')}-${this.answers.join(';')}-${this.position}`;
+		return `@${this.version}-${this.index}-${this.guesses.join(';')}-${this.answers.join(';')}-${
+			this.position
+		}`;
 	}
 }
