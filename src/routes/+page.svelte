@@ -81,7 +81,6 @@
 	function update(event: MouseEvent) {
 		const guess = data.guesses[i];
 		const key = (event.target as HTMLButtonElement).getAttribute('data-key');
-
 		if (key === 'backspace') {
 			data.guesses[i] = guess.slice(0, -1);
 			if (form?.badGuess) form.badGuess = false;
@@ -191,8 +190,8 @@
 						data-key="enter"
 						disabled={!submittable}
 					>
-						<span class="sr-only"> Mata in </span>
-						<CornerDownLeft size="16" />
+						<span class="sr-only">Mata in</span>
+						<CornerDownLeft class="pointer-events-none" size="16" />
 					</button>
 
 					<button
@@ -203,8 +202,8 @@
 						name="key"
 						value="backspace"
 					>
-						<span class="sr-only"> Rensa </span>
-						<Delete size="16" />
+						<span class="sr-only">Rensa</span>
+						<Delete class="pointer-events-none" size="16" />
 					</button>
 				</div>
 			</div>
