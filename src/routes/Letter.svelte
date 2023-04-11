@@ -22,7 +22,8 @@
 		}
 	);
 	$: letterClasses = classNames(
-		'uppercase absolute inset-0 text-center translate-z-[--half-side] border',
+		// Firefox workaround https://stackoverflow.com/a/7271936
+		'uppercase absolute inset-0 text-center translate-z-[--half-side] border [min-width:-moz-available]',
 		selected ? 'bg-blue-100' : 'bg-white'
 	);
 </script>
